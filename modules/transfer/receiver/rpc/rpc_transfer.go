@@ -16,13 +16,14 @@ package rpc
 
 import (
 	"fmt"
+	"strconv"
+	"time"
+
 	cmodel "github.com/open-falcon/falcon-plus/common/model"
 	cutils "github.com/open-falcon/falcon-plus/common/utils"
 	"github.com/open-falcon/falcon-plus/modules/transfer/g"
 	"github.com/open-falcon/falcon-plus/modules/transfer/proc"
 	"github.com/open-falcon/falcon-plus/modules/transfer/sender"
-	"strconv"
-	"time"
 )
 
 type Transfer int
@@ -51,7 +52,8 @@ func (t *Transfer) Update(args []*cmodel.MetricValue, reply *cmodel.TransferResp
 	return RecvMetricValues(args, reply, "rpc")
 }
 
-// process new metric values
+// RecvMetricValues process new metric values
+// 修改此逻辑
 func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse, from string) error {
 	start := time.Now()
 	reply.Invalid = 0
@@ -101,6 +103,7 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 			v.Timestamp = now
 		}
 
+		// This can be use for push to pushgateway
 		fv := &cmodel.MetaData{
 			Metric:      v.Metric,
 			Endpoint:    v.Endpoint,
@@ -110,10 +113,14 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 			Tags:        cutils.DictedTagstring(v.Tags), //TODO tags键值对的个数,要做一下限制
 		}
 
+		// debug
+		fmt.Println("++debug: " + fv.String() + "\n")
+
 		valid := true
 		var vv float64
 		var err error
 
+		// 不管value之前是什么类型，这里都转换成float
 		switch cv := v.Value.(type) {
 		case string:
 			vv, err = strconv.ParseFloat(cv, 64)

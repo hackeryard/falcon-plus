@@ -15,11 +15,12 @@
 package rpc
 
 import (
-	"github.com/open-falcon/falcon-plus/modules/transfer/g"
 	"log"
 	"net"
 	"net/rpc"
 	"net/rpc/jsonrpc"
+
+	"github.com/open-falcon/falcon-plus/modules/transfer/g"
 )
 
 func StartRpc() {
@@ -41,6 +42,7 @@ func StartRpc() {
 	}
 
 	server := rpc.NewServer()
+	// RPC client using "Transfer.Update" to using the function in server
 	server.Register(new(Transfer))
 
 	for {

@@ -16,13 +16,14 @@ package sender
 
 import (
 	"bytes"
+	"log"
+	"time"
+
 	cmodel "github.com/open-falcon/falcon-plus/common/model"
 	"github.com/open-falcon/falcon-plus/modules/transfer/g"
 	"github.com/open-falcon/falcon-plus/modules/transfer/proc"
 	nsema "github.com/toolkits/concurrent/semaphore"
 	"github.com/toolkits/container/list"
-	"log"
-	"time"
 )
 
 // send
@@ -121,6 +122,7 @@ func forward2GraphTask(Q *list.SafeListLimited, node string, addr string, concur
 	sema := nsema.NewSemaphore(concurrent)
 
 	for {
+		// count是实际可发送的item数量
 		items := Q.PopBackBy(batch)
 		count := len(items)
 		if count == 0 {
@@ -128,6 +130,7 @@ func forward2GraphTask(Q *list.SafeListLimited, node string, addr string, concur
 			continue
 		}
 
+		// copy item to graphItems array
 		graphItems := make([]*cmodel.GraphItem, count)
 		for i := 0; i < count; i++ {
 			graphItems[i] = items[i].(*cmodel.GraphItem)
@@ -189,6 +192,7 @@ func forward2TsdbTask(concurrent int) {
 			for i := 0; i < retry; i++ {
 				err = TsdbConnPoolHelper.Send(tsdbBuffer.Bytes())
 				if err == nil {
+					/// proc用来计数
 					proc.SendToTsdbCnt.IncrBy(int64(len(itemList)))
 					break
 				}

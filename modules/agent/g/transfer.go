@@ -56,6 +56,7 @@ func initTransferClient(addr string) *SingleConnRpcClient {
 	return c
 }
 
+// RPC 调用
 func updateMetrics(c *SingleConnRpcClient, metrics []*model.MetricValue, resp *model.TransferResponse) bool {
 	err := c.Call("Transfer.Update", metrics, resp)
 	if err != nil {
