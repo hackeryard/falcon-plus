@@ -113,9 +113,6 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 			Tags:        cutils.DictedTagstring(v.Tags), //TODO tags键值对的个数,要做一下限制
 		}
 
-		// debug
-		fmt.Println("++debug: " + fv.String() + "\n")
-
 		valid := true
 		var vv float64
 		var err error
@@ -142,6 +139,9 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 
 		fv.Value = vv
 		items = append(items, fv)
+
+		// debug
+		fmt.Println("++debug: " + fv.String() + "\n")
 	}
 
 	// statistics
