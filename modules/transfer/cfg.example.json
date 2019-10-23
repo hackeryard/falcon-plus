@@ -10,12 +10,12 @@
         "listen": "0.0.0.0:8433"
     },
     "socket": {
-        "enabled": true,
+        "enabled": false,
         "listen": "0.0.0.0:4444",
         "timeout": 3600
     },
     "judge": {
-        "enabled": true,
+        "enabled": false,
         "batch": 200,
         "connTimeout": 1000,
         "callTimeout": 5000,
@@ -27,7 +27,7 @@
         }
     },
     "graph": {
-        "enabled": true,
+        "enabled": false,
         "batch": 200,
         "connTimeout": 1000,
         "callTimeout": 5000,
