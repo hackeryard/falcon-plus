@@ -154,7 +154,7 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 
 		metricName := strings.Join(strings.Split(fv.Metric, "."), "_")
 		metricName = strings.Join(strings.Split(fv.Metric, "-"), "_")
-		metricName += "vm_monitor"
+		metricName = "vm_monitor_" + metricName
 		if fv.CounterType == "GAUGE" {
 			metricProme := prometheus.NewGauge(prometheus.GaugeOpts{
 				Name: metricName,
