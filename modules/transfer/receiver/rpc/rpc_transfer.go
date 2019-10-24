@@ -165,7 +165,8 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 		if fv.CounterType == "GAUGE" {
 			fmt.Println("++debug: " + metricName)
 			metricProme := prometheus.NewGauge(prometheus.GaugeOpts{
-				Name: metricName,
+				Name:        metricName,
+				ConstLabels: fv.Tags,
 			})
 			// registry := prometheus.NewRegistry()
 			// registry.MustRegister(metricProme)
