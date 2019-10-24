@@ -65,7 +65,7 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 
 	items := []*cmodel.MetaData{}
 	// update: using global registery
-	pusher := push.New("http://10.10.26.24:9091", "vm_monitor")
+	pusher := push.New("http://10.10.26.22:9091", "vm_monitor")
 
 	// @@debug use:
 	fmt.Println("++++len of metrics: ", len(args))
