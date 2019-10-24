@@ -30,7 +30,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus/push"
 )
 
-type Transfer int
+// Transfer using it to attache IP addr
+type Transfer string
 
 type TransferResp struct {
 	Msg        string
@@ -55,6 +56,8 @@ func (this *Transfer) Ping(req cmodel.NullRpcRequest, resp *cmodel.SimpleRpcResp
 
 // Update : using transfer rpc interface to receivee metrics
 func (t *Transfer) Update(args []*cmodel.MetricValue, reply *cmodel.TransferResponse) error {
+	// debug just
+	fmt.Println("--debug: ", t)
 	return RecvMetricValues(args, reply, "rpc")
 }
 
