@@ -1,4 +1,6 @@
-package main
+package rpc
+
+// package main
 
 import (
 	"fmt"
