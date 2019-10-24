@@ -70,8 +70,8 @@ type MetaData struct {
 }
 
 func (t *MetaData) String() string {
-	return fmt.Sprintf("<MetaData Endpoint:%s, Metric:%s, Timestamp:%d, Step:%d, Value:%f, Tags:%v>",
-		t.Endpoint, t.Metric, t.Timestamp, t.Step, t.Value, t.Tags)
+	return fmt.Sprintf("<MetaData Endpoint:%s, Metric:%s, Timestamp:%d, Step:%d, Value:%f, Type:%s, Tags:%v>",
+		t.Endpoint, t.Metric, t.Timestamp, t.Step, t.Value, t.CounterType, t.Tags)
 }
 
 func (t *MetaData) PK() string {
