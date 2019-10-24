@@ -21,10 +21,15 @@ import (
 	"net/rpc"
 	"net/rpc/jsonrpc"
 	"strings"
+	"sync"
 
 	"github.com/open-falcon/falcon-plus/modules/transfer/g"
 )
 
+// define global in package rpc
+var clientIP string
+
+// StartRpc accept connections and do rpc codec
 func StartRpc() {
 	if !g.Config().Rpc.Enabled {
 		return
@@ -47,15 +52,22 @@ func StartRpc() {
 	// RPC client using "Transfer.Update" to using the function in server
 	server.Register(new(Transfer))
 
+	var mutex sync.Mutex
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
 			log.Println("listener.Accept occur error:", err)
 			continue
 		}
+
+		mutex.Lock()
 		// 从conn这里获取jsonrpc客户端的ip地址
-		clientIP := strings.Split(conn.RemoteAddr().String(), ":")[0]
+		clientIP = strings.Split(conn.RemoteAddr().String(), ":")[0]
+		// 只能把IP作为全局变量共享 最后发现这样也不行 现在的做法是使用互斥锁
+		// 一个conn对应一个地址 修改rpc的代码 使得IP能够作为参数传递
 		fmt.Println("++info: remote client addr: ", clientIP)
 		go server.ServeCodec(jsonrpc.NewServerCodec(conn))
+
+		mutex.Unlock()
 	}
 }

@@ -48,6 +48,7 @@ func (t *TransferResp) String() string {
 	return s
 }
 
+// Ping just test
 func (this *Transfer) Ping(req cmodel.NullRpcRequest, resp *cmodel.SimpleRpcResponse) error {
 	return nil
 }
@@ -115,6 +116,8 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 		}
 
 		// This can be use for push to pushgateway
+		// @@ using instance tag: instace=clientIP
+		v.Tags += ", instance=" + clientIP
 		fv := &cmodel.MetaData{
 			Metric:      v.Metric,
 			Endpoint:    v.Endpoint,
