@@ -68,8 +68,9 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 	pusher := push.New("http://10.10.26.24:9091", "vm_monitor")
 
 	// @@debug use:
+	fmt.Println("++++len of metrics: ", len(args))
 	for _, v := range args {
-		fmt.Println("++++len of metrics: ", len(args))
+
 		if v == nil {
 			reply.Invalid += 1
 			continue
