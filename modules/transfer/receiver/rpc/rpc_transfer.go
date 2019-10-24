@@ -153,7 +153,7 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 		// fund bug
 
 		metricName := strings.Join(strings.Split(fv.Metric, "."), "_")
-		metricName = strings.Join(strings.Split(fv.Metric, "-"), "_")
+		metricName = strings.Join(strings.Split(metricName, "-"), "_")
 		metricName = "vm_monitor_" + metricName
 		if fv.CounterType == "GAUGE" {
 			metricProme := prometheus.NewGauge(prometheus.GaugeOpts{
