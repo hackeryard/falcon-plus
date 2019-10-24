@@ -180,7 +180,8 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 		} else { // counter
 			fmt.Println("++debug: " + metricName)
 			metricProme := prometheus.NewCounter(prometheus.CounterOpts{
-				Name: metricName,
+				Name:        metricName,
+				ConstLabels: fv.Tags,
 			})
 			// registry := prometheus.NewRegistry()
 			// registry.MustRegister(metricProme)
