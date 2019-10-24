@@ -164,7 +164,7 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 			// registry := prometheus.NewRegistry()
 			// registry.MustRegister(metricProme)
 			metricProme.Set(float64(fv.Value))
-			pusher := push.New("http://10.10.26.24:9091", "vm_monitor").Gatherer(registry)
+			pusher := push.New("http://10.10.26.24:9091", "vm_monitor")
 
 			// add metrics
 			pusher.Collector(metricProme)
