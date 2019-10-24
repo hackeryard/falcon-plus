@@ -160,9 +160,12 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 				Name: metricName,
 			})
 			registry := prometheus.NewRegistry()
-			registry.MustRegister(metricProme)
+			// registry.MustRegister(metricProme)
+			metricProme.Set(float64(fv.Value))
 			pusher := push.New("http://10.10.26.24:9091", "vm_monitor").Gatherer(registry)
 
+			// add metrics
+			pusher.Collector(metricProme)
 			if err := pusher.Push(); err != nil {
 				fmt.Println("Could not push to Pushgateway:", err)
 			}
@@ -171,9 +174,12 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 				Name: metricName,
 			})
 			registry := prometheus.NewRegistry()
-			registry.MustRegister(metricProme)
+			// registry.MustRegister(metricProme)
+			metricProme.Add(float64(fv.Value))
 			pusher := push.New("http://10.10.26.24:9091", "vm_monitor").Gatherer(registry)
 
+			// add metrics
+			pusher.Collector(metricProme)
 			if err := pusher.Push(); err != nil {
 				fmt.Println("Could not push to Pushgateway:", err)
 			}
