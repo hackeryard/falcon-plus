@@ -161,7 +161,7 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 			metricProme := prometheus.NewGauge(prometheus.GaugeOpts{
 				Name: metricName,
 			})
-			registry := prometheus.NewRegistry()
+			// registry := prometheus.NewRegistry()
 			// registry.MustRegister(metricProme)
 			metricProme.Set(float64(fv.Value))
 			pusher := push.New("http://10.10.26.24:9091", "vm_monitor").Gatherer(registry)
@@ -176,10 +176,10 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 			metricProme := prometheus.NewCounter(prometheus.CounterOpts{
 				Name: metricName,
 			})
-			registry := prometheus.NewRegistry()
+			// registry := prometheus.NewRegistry()
 			// registry.MustRegister(metricProme)
 			metricProme.Add(float64(fv.Value))
-			pusher := push.New("http://10.10.26.24:9091", "vm_monitor").Gatherer(registry)
+			pusher := push.New("http://10.10.26.24:9091", "vm_monitor")
 
 			// add metrics
 			pusher.Collector(metricProme)
