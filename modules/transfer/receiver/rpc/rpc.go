@@ -29,7 +29,7 @@ import (
 // define global in package rpc
 var clientIP string
 
-// StartRpc accept connections and do rpc codec
+// StartRpc Server: accept connections and do rpc codec
 func StartRpc() {
 	if !g.Config().Rpc.Enabled {
 		return
@@ -50,7 +50,9 @@ func StartRpc() {
 
 	server := rpc.NewServer()
 	// RPC client using "Transfer.Update" to using the function in server
-	server.Register(new(Transfer))
+	// Note: register at begining, just once
+	transferIns := new(Transfer)
+	server.Register(transferIns)
 
 	var mutex sync.Mutex
 	for {
@@ -66,6 +68,8 @@ func StartRpc() {
 		// 只能把IP作为全局变量共享 最后发现这样也不行 现在的做法是使用互斥锁
 		// 一个conn对应一个地址 修改rpc的代码 使得IP能够作为参数传递
 		fmt.Println("++info: remote client addr: ", clientIP)
+
+		transferIns.clientAddr = clientIP
 		go server.ServeCodec(jsonrpc.NewServerCodec(conn))
 
 		mutex.Unlock()

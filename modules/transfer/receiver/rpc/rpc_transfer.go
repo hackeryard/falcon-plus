@@ -31,7 +31,9 @@ import (
 )
 
 // Transfer using it to attache IP addr
-type Transfer string
+type Transfer struct {
+	clientAddr string
+}
 
 type TransferResp struct {
 	Msg        string
@@ -57,7 +59,7 @@ func (this *Transfer) Ping(req cmodel.NullRpcRequest, resp *cmodel.SimpleRpcResp
 // Update : using transfer rpc interface to receivee metrics
 func (t *Transfer) Update(args []*cmodel.MetricValue, reply *cmodel.TransferResponse) error {
 	// debug just
-	fmt.Println("--debug: ", *t)
+	fmt.Println("[+++debug]: ", t.clientAddr)
 	return RecvMetricValues(args, reply, "rpc")
 }
 
