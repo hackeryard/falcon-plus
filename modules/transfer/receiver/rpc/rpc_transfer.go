@@ -179,7 +179,7 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 
 		start := time.Now()
 		// metrics 1
-		records.Set(float64(n))
+		records.Set(float64(100))
 		// Note that time.Since only uses a monotonic clock in Go1.9+.
 		//metrics 2
 		duration.Set(time.Since(start).Seconds())
