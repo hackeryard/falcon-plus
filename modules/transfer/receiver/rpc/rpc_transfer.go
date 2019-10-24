@@ -199,7 +199,8 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 	} // end for every metadata received
 
 	// send total metrics at once
-	if err := pusher.Push(); err != nil {
+	// @@change Push() to Add()
+	if err := pusher.Add(); err != nil {
 		fmt.Println("Could not push to Pushgateway:", err)
 	}
 
