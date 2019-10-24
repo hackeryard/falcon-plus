@@ -30,6 +30,7 @@ func InitDataHistory() {
 	}
 }
 
+// 定时任务：使用g.SendToTransfer(mvs)发送metrics
 func Collect() {
 
 	if !g.Config().Transfer.Enabled {

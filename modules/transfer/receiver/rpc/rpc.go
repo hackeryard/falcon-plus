@@ -15,10 +15,12 @@
 package rpc
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"net/rpc"
 	"net/rpc/jsonrpc"
+	"strings"
 
 	"github.com/open-falcon/falcon-plus/modules/transfer/g"
 )
@@ -51,6 +53,9 @@ func StartRpc() {
 			log.Println("listener.Accept occur error:", err)
 			continue
 		}
+		// 从conn这里获取jsonrpc客户端的ip地址
+		clientIP := strings.Split(conn.RemoteAddr().String(), ":")[0]
+		fmt.Println("++info: remote client addr: ", clientIP)
 		go server.ServeCodec(jsonrpc.NewServerCodec(conn))
 	}
 }

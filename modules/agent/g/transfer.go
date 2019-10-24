@@ -28,6 +28,7 @@ var (
 	TransferClients     map[string]*SingleConnRpcClient = map[string]*SingleConnRpcClient{}
 )
 
+// SendMetrics 发送逻辑：每次从transfer列表中随机选择一个，如果发送正常，则不继续发送
 func SendMetrics(metrics []*model.MetricValue, resp *model.TransferResponse) {
 	rand.Seed(time.Now().UnixNano())
 	for _, i := range rand.Perm(len(Config().Transfer.Addrs)) {
