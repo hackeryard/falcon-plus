@@ -70,7 +70,8 @@ func StartRpc() {
 		fmt.Println("++info: remote client addr: ", clientIP)
 
 		transferIns.clientAddr = clientIP
-		go server.ServeCodec(jsonrpc.NewServerCodec(conn))
+		// @@remove go func
+		server.ServeCodec(jsonrpc.NewServerCodec(conn))
 
 		mutex.Unlock()
 	}
