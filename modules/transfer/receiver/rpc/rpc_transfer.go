@@ -52,6 +52,7 @@ func (this *Transfer) Ping(req cmodel.NullRpcRequest, resp *cmodel.SimpleRpcResp
 	return nil
 }
 
+// Update : using transfer rpc interface to receivee metrics
 func (t *Transfer) Update(args []*cmodel.MetricValue, reply *cmodel.TransferResponse) error {
 	return RecvMetricValues(args, reply, "rpc")
 }
@@ -66,7 +67,9 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 	// update: using global registery
 	pusher := push.New("http://10.10.26.24:9091", "vm_monitor")
 
+	// @@debug use:
 	for _, v := range args {
+		fmt.Println("++++len of metrics: ", len(args))
 		if v == nil {
 			reply.Invalid += 1
 			continue
