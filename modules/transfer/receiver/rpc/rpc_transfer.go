@@ -150,8 +150,10 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 		// using go func to push to pushgateway(from cfg.json)
 		// prefix: vm_
 		// strings.Join(strings.Split(msg, "."), "_")
+		// fund bug
 
 		metricName := strings.Join(strings.Split(fv.Metric, "."), "_")
+		metricName = strings.Join(strings.Split(fv.Metric, "-"), "_")
 		metricName += "vm_monitor"
 		if fv.CounterType == "GAUGE" {
 			metricProme := prometheus.NewGauge(prometheus.GaugeOpts{
