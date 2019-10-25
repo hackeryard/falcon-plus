@@ -16,13 +16,14 @@ package rpc
 
 import (
 	"bytes"
+	"sort"
+	"strings"
+	"time"
+
 	"github.com/open-falcon/falcon-plus/common/model"
 	"github.com/open-falcon/falcon-plus/common/utils"
 	"github.com/open-falcon/falcon-plus/modules/hbs/cache"
 	"github.com/open-falcon/falcon-plus/modules/hbs/g"
-	"sort"
-	"strings"
-	"time"
 )
 
 func (t *Agent) MinePlugins(args model.AgentHeartbeatRequest, reply *model.AgentPluginsResponse) error {
@@ -36,13 +37,14 @@ func (t *Agent) MinePlugins(args model.AgentHeartbeatRequest, reply *model.Agent
 	return nil
 }
 
+// ReportStatus rpc function for "Agent.ReportStatus"
 func (t *Agent) ReportStatus(args *model.AgentReportRequest, reply *model.SimpleRpcResponse) error {
 	if args.Hostname == "" {
 		reply.Code = 1
 		return nil
 	}
 
-	cache.Agents.Put(args)
+	cache.Agents.Put(args) // 查看GET函数
 
 	return nil
 }

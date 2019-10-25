@@ -31,6 +31,7 @@ type SafeAgents struct {
 	M map[string]*model.AgentUpdateInfo
 }
 
+// @@ global
 var Agents = NewSafeAgents()
 
 func NewSafeAgents() *SafeAgents {

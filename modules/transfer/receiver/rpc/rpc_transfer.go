@@ -72,7 +72,7 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 
 	items := []*cmodel.MetaData{}
 	// update: using global registery
-	pusher := push.New("http://10.10.26.22:9091", "vm_monitor")
+	pusher := push.New("http://10.10.26.22:9091", "vm_monitor").Grouping("instance", ipAddr)
 
 	// @@debug use:
 	fmt.Println("++++len of metrics: ", len(args))
@@ -122,8 +122,8 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 		}
 
 		// This can be use for push to pushgateway
-		// @@ using instance tag: instace=clientIP
-		v.Tags += ", instance=" + ipAddr
+		// @@ 添加额外标签 using instance tag: instace=clientIP
+		v.Tags += ", ip=" + ipAddr
 		fv := &cmodel.MetaData{
 			Metric:      v.Metric,
 			Endpoint:    v.Endpoint,
@@ -209,6 +209,7 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 
 	// send total metrics at once
 	// @@change Push() to Add()
+	// async add
 	if err := pusher.Add(); err != nil {
 		fmt.Println("Could not push to Pushgateway:", err)
 	}

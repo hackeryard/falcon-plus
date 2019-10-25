@@ -16,10 +16,11 @@ package cron
 
 import (
 	"fmt"
-	"github.com/open-falcon/falcon-plus/common/model"
-	"github.com/open-falcon/falcon-plus/modules/agent/g"
 	"log"
 	"time"
+
+	"github.com/open-falcon/falcon-plus/common/model"
+	"github.com/open-falcon/falcon-plus/modules/agent/g"
 )
 
 func ReportAgentStatus() {
@@ -35,6 +36,7 @@ func reportAgentStatus(interval time.Duration) {
 			hostname = fmt.Sprintf("error:%s", err.Error())
 		}
 
+		// @@ agent信息上报：using ip to report
 		req := model.AgentReportRequest{
 			Hostname:      hostname,
 			IP:            g.IP(),
@@ -43,6 +45,7 @@ func reportAgentStatus(interval time.Duration) {
 		}
 
 		var resp model.SimpleRpcResponse
+		// server define in modules/hbs/rpc/agent.go
 		err = g.HbsClient.Call("Agent.ReportStatus", req, &resp)
 		if err != nil || resp.Code != 0 {
 			log.Println("call Agent.ReportStatus fail:", err, "Request:", req, "Response:", resp)

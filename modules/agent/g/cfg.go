@@ -55,6 +55,7 @@ type CollectorConfig struct {
 	MountPoint  []string `json:"mountPoint"`
 }
 
+// @@ using ip
 type GlobalConfig struct {
 	Debug         bool              `json:"debug"`
 	Hostname      string            `json:"hostname"`
