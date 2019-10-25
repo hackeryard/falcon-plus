@@ -16,9 +16,10 @@ package http
 
 import (
 	"encoding/json"
+	"net/http"
+
 	cmodel "github.com/open-falcon/falcon-plus/common/model"
 	prpc "github.com/open-falcon/falcon-plus/modules/transfer/receiver/rpc"
-	"net/http"
 )
 
 func api_push_datapoints(rw http.ResponseWriter, req *http.Request) {
@@ -36,7 +37,7 @@ func api_push_datapoints(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	reply := &cmodel.TransferResponse{}
-	prpc.RecvMetricValues(metrics, reply, "http")
+	prpc.RecvMetricValues(metrics, reply, "http", "localhost")
 
 	RenderDataJson(rw, reply)
 }
