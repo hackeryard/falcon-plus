@@ -71,8 +71,13 @@ func StartRpc() {
 
 		transferIns.clientAddr = clientIP
 		// @@remove go func
-		server.ServeCodec(jsonrpc.NewServerCodec(conn))
+		// conn的信息一直都在
+		// rpc的设计：直接加一个json的encodec 加了一层 就构成了jsonrpc
+		// ServeCodec is like ServeConn but uses the specified codec to decode requests and encode responses.
+		// 每一次调用ServeCodec 就带一个IP var
+		go server.ServeCodec(jsonrpc.NewServerCodec(conn))
 
 		mutex.Unlock()
+
 	}
 }

@@ -52,20 +52,21 @@ func (t *TransferResp) String() string {
 }
 
 // Ping just test
-func (this *Transfer) Ping(req cmodel.NullRpcRequest, resp *cmodel.SimpleRpcResponse) error {
+func (this *Transfer) Ping(req cmodel.NullRpcRequest, resp *cmodel.SimpleRpcResponse, ipAddr string) error {
 	return nil
 }
 
+// rpc终于可以给Update函数传参了，接下来在接收逻辑中添加ip地址
 // Update : using transfer rpc interface to receivee metrics
-func (t *Transfer) Update(args []*cmodel.MetricValue, reply *cmodel.TransferResponse) error {
+func (t *Transfer) Update(args []*cmodel.MetricValue, reply *cmodel.TransferResponse, ipAddr string) error {
 	// debug just
 	fmt.Println("[+++debug]: ", t.clientAddr)
-	return RecvMetricValues(args, reply, "rpc")
+	return RecvMetricValues(args, reply, "rpc", ipAddr)
 }
 
 // RecvMetricValues process new metric values
 // 修改此逻辑
-func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse, from string) error {
+func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse, from string, ipAddr string) error {
 	start := time.Now()
 	reply.Invalid = 0
 
@@ -122,7 +123,7 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 
 		// This can be use for push to pushgateway
 		// @@ using instance tag: instace=clientIP
-		v.Tags += ", instance=" + clientIP
+		v.Tags += ", instance=" + ipAddr
 		fv := &cmodel.MetaData{
 			Metric:      v.Metric,
 			Endpoint:    v.Endpoint,
@@ -159,7 +160,7 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 		fv.Value = vv
 		items = append(items, fv)
 
-		// debug
+		// debug fv
 		fmt.Println("++debug: " + fv.String() + "\n")
 
 		// using go func to push to pushgateway(from cfg.json)
