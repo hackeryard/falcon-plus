@@ -59,23 +59,31 @@ func (this *Transfer) Ping(req cmodel.NullRpcRequest, resp *cmodel.SimpleRpcResp
 // rpc终于可以给Update函数传参了，接下来在接收逻辑中添加ip地址
 // Update : using transfer rpc interface to receivee metrics
 func (t *Transfer) Update(args []*cmodel.MetricValue, reply *cmodel.TransferResponse, ipAddr string) error {
-	// debug just
-	fmt.Println("[+++debug]: ", t.clientAddr)
 	return RecvMetricValues(args, reply, "rpc", ipAddr)
 }
 
 // RecvMetricValues process new metric values
 // 修改此逻辑
 func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse, from string, ipAddr string) error {
+	// @@
+	cfg := g.Config()
+	if !cfg.Pushgateway.Enabled {
+		// break
+		return nil
+	}
+	pushgatewayURL := "http://" + cfg.Pushgateway.Listen
+
 	start := time.Now()
 	reply.Invalid = 0
 
 	items := []*cmodel.MetaData{}
 	// update: using global registery
-	pusher := push.New("http://10.10.26.22:9091", "vm_monitor").Grouping("instance", ipAddr)
+	pusher := push.New(pushgatewayURL, "vm_monitor").Grouping("instance", ipAddr)
 
 	// @@debug use:
-	fmt.Println("++++len of metrics: ", len(args))
+	if g.Config().Debug {
+		fmt.Println("++++len of metrics: ", len(args))
+	}
 	for _, v := range args {
 
 		if v == nil {
@@ -161,7 +169,9 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 		items = append(items, fv)
 
 		// debug fv
-		fmt.Println("++debug: " + fv.String() + "\n")
+		if g.Config().Debug {
+			fmt.Println("++debug: " + fv.String() + "\n")
+		}
 
 		// using go func to push to pushgateway(from cfg.json)
 		// prefix: vm_
@@ -172,7 +182,9 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 		metricName = strings.Join(strings.Split(metricName, "-"), "_")
 		metricName = "vm_monitor_" + metricName
 		if fv.CounterType == "GAUGE" {
-			fmt.Println("++debug: " + metricName)
+			if g.Config().Debug {
+				fmt.Println("++debug: " + metricName)
+			}
 			metricProme := prometheus.NewGauge(prometheus.GaugeOpts{
 				Name:        metricName,
 				ConstLabels: fv.Tags,
@@ -188,7 +200,9 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 			// 	fmt.Println("Could not push to Pushgateway:", err)
 			// }
 		} else { // counter
-			fmt.Println("++debug: " + metricName)
+			if g.Config().Debug {
+				fmt.Println("++debug: " + metricName)
+			}
 			metricProme := prometheus.NewCounter(prometheus.CounterOpts{
 				Name:        metricName,
 				ConstLabels: fv.Tags,
@@ -223,7 +237,8 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 		proc.HttpRecvCnt.IncrBy(cnt)
 	}
 
-	cfg := g.Config()
+	// @@ 优化：移至函数开始
+	// cfg := g.Config()
 
 	if cfg.Graph.Enabled {
 		sender.Push2GraphSendQueue(items)
