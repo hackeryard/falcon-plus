@@ -15,7 +15,6 @@
 package rpc
 
 import (
-	"fmt"
 	"log"
 	"net"
 	"net/rpc"
@@ -67,7 +66,7 @@ func StartRpc() {
 		clientIP = strings.Split(conn.RemoteAddr().String(), ":")[0]
 		// 只能把IP作为全局变量共享 最后发现这样也不行 现在的做法是使用互斥锁
 		// 一个conn对应一个地址 修改rpc的代码 使得IP能够作为参数传递
-		fmt.Println("++info: remote client addr: ", clientIP)
+		log.Println("[info] new remote client addr: ", clientIP)
 
 		transferIns.clientAddr = clientIP
 		// @@remove go func

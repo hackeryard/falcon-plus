@@ -16,6 +16,7 @@ package rpc
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -82,7 +83,7 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 
 	// @@debug use:
 	if g.Config().Debug {
-		fmt.Println("++++len of metrics: ", len(args))
+		log.Println("[debug]: len of metrics in one rpc: ", len(args))
 	}
 	for _, v := range args {
 
@@ -170,7 +171,7 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 
 		// debug fv
 		if g.Config().Debug {
-			fmt.Println("++debug: " + fv.String() + "\n")
+			log.Println("[debug]: " + fv.String() + "\n")
 		}
 
 		// using go func to push to pushgateway(from cfg.json)
@@ -183,7 +184,7 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 		metricName = "vm_monitor_" + metricName
 		if fv.CounterType == "GAUGE" {
 			if g.Config().Debug {
-				fmt.Println("++debug: " + metricName)
+				log.Println("[debug]: " + metricName)
 			}
 			metricProme := prometheus.NewGauge(prometheus.GaugeOpts{
 				Name:        metricName,
@@ -201,7 +202,7 @@ func RecvMetricValues(args []*cmodel.MetricValue, reply *cmodel.TransferResponse
 			// }
 		} else { // counter
 			if g.Config().Debug {
-				fmt.Println("++debug: " + metricName)
+				log.Println("[debug]: " + metricName)
 			}
 			metricProme := prometheus.NewCounter(prometheus.CounterOpts{
 				Name:        metricName,
